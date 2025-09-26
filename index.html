@@ -1,0 +1,185 @@
+agri-dashboard/
+├── client/                # React frontend
+│   ├── public/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       └── App.js
+├── server/                # Node.js backend
+│   └── index.js
+├── package.json           # Root package file
+└── README.md
+
+import React from 'react';
+import Dashboard from './components/Dashboard';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Agriculture Import/Export Dashboard</h1>
+      <Dashboard />
+    </div>
+  );
+}
+
+export default App;
+
+import React, { useEffect, useState } from 'react';
+import './Dashboard.css';
+
+function Dashboard() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/exports')
+      .then(res => res.json())
+      .then(setData)
+      .catch(console.error);
+  }, []);
+
+  return (
+    <div className="dashboard">
+      <h2>Crop & Seed Export Data</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Form</th>
+            <th>Crop</th>
+            <th>Seed</th>
+            <th>Quantity</th>
+            <th>Destination</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((entry, idx) => (
+            <tr key={idx}>
+              <td>{entry.form}</td>
+              <td>{entry.crop}</td>
+              <td>{entry.seed}</td>
+              <td>{entry.quantity}</td>
+              <td>{entry.destination}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default Dashboard;
+
+import React, { useEffect, useState } from 'react';
+import './Dashboard.css';
+
+function Dashboard() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/exports')
+      .then(res => res.json())
+      .then(setData)
+      .catch(console.error);
+  }, []);
+
+  return (
+    <div className="dashboard">
+      <h2>Crop & Seed Export Data</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Form</th>
+            <th>Crop</th>
+            <th>Seed</th>
+            <th>Quantity</th>
+            <th>Destination</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((entry, idx) => (
+            <tr key={idx}>
+              <td>{entry.form}</td>
+              <td>{entry.crop}</td>
+              <td>{entry.seed}</td>
+              <td>{entry.quantity}</td>
+              <td>{entry.destination}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default Dashboard;
+
+.dashboard {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+BACKEND CODE:
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const PORT = 5000;
+
+app.use(cors());
+
+const exportData = [
+  { form: "Bulk", crop: "Wheat", seed: "Hybrid A", quantity: "1000 tons", destination: "Germany" },
+  { form: "Packaged", crop: "Rice", seed: "IR64", quantity: "800 tons", destination: "UAE" },
+  { form: "Container", crop: "Maize", seed: "Golden", quantity: "500 tons", destination: "Kenya" }
+];
+
+app.get('/api/exports', (req, res) => {
+  res.json(exportData);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+ROO PACKAGE.JSON
+{
+  "name": "agri-dashboard",
+  "scripts": {
+    "start": "node server/index.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run start\" \"npm run client\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}
+
+HOW TO RUN:
+# Backend
+cd agri-dashboard
+npm install
+node server/index.js
+
+# Frontend
+cd client
+npx create-react-app .
+npm install
+npm start
